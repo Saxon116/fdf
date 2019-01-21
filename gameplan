@@ -1,0 +1,14 @@
+
+
+
+struct for each line
+
+int *array;
+int lengthofarray;
+
+
+function that loops through the linked list, increasing a y variable for each
+element in the list, and another loop going through the int array for x.
+
+draw point at x * (diagonal-down-right offset), y * (diagonal-down-left offset),
+z (which basically subtracts to y so the point goes straight up)
