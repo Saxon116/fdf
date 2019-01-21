@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/17 16:12:23 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/21 23:51:27 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void line(int x1, int y1, int x2, int y2, void *mlx_ptr, void *win_ptr)
 int deal_key(int key, void *param)
 {
   //printf("keycode is %d\n", key);
-  if(key == 53)
+  if(key == 53 || key == 65307)
     exit(0);
   return (0);
 }
@@ -113,17 +113,15 @@ t_list *get_head (int fd)
 
 }
 
-void draw_points(t_list *head, int rows, int columns, void *mlx_ptr, void *win_ptr)
+void draw_points(t_list *head, int width, float ratio, void *mlx_ptr, void *win_ptr)
 {
   int i = 0;
   int j = 0;
   float scale = 10;
-  float startX = 500;
-  float startY = 100;
   t_list *list;
   char **elements;
   char **nextelements;
-
+	int startY = 1;
   list = head;
 
   while(list->next)
@@ -136,15 +134,15 @@ void draw_points(t_list *head, int rows, int columns, void *mlx_ptr, void *win_p
       // - (j * scale * 1.7), startY + (i * scale) + (j * scale)
       // - ft_atoi(elements[i]) * 10, 0x33FF9C);
 
-      line(startX + (i * scale * 1.7)
+      line(ratio + (i * scale * 1.7)
       - (j * scale * 1.7), startY + (i * scale) + (j * scale)
-      - ft_atoi(elements[i]) * 10, startX + ((i + 1) * scale * 1.7)
+      - ft_atoi(elements[i]) * 10, ratio + ((i + 1) * scale * 1.7)
       - (j * scale * 1.7), startY + ((i + 1) * scale) + (j * scale)
       - ft_atoi(elements[i + 1]) * 10, mlx_ptr, win_ptr);
 
-      line(startX + (i * scale * 1.7)
+      line(ratio + (i * scale * 1.7)
       - (j * scale * 1.7), startY + (i * scale) + (j * scale)
-      - ft_atoi(elements[i]) * 10, startX + (i * scale * 1.7)
+      - ft_atoi(elements[i]) * 10, ratio + (i * scale * 1.7)
       - ((j + 1) * scale * 1.7), startY + (i * scale) + ((j + 1) * scale)
       - ft_atoi(nextelements[i]) * 10, mlx_ptr, win_ptr);
 
@@ -159,6 +157,8 @@ void draw_points(t_list *head, int rows, int columns, void *mlx_ptr, void *win_p
 
 }
 
+
+
 int main(int argc, char **argv)
 {
   int        fd;
@@ -169,18 +169,37 @@ int main(int argc, char **argv)
   t_list *head;
   float scale = 50;
   int i = 0;
+	int width;
+	int height;
+	int ratio;
 
   if(argc != 2)
+	{
+		printf("usage: ./fdf <filename>\n");
 		return (0);
-
+	}
   fd = open(argv[1], O_RDONLY);
   head = get_head(fd);
 
+	width = num_of_elements(head->content);
+	height = list_length(head);
+	ratio = height;
+	ratio *= 17;
+
+	printf("width is %d and height is %d ratio is %d\n", width, height, ratio);
+
+	width = (17 * num_of_elements(head->content)) + (17 * list_length(head));
+	height = width / 1.75;
+
+
+
+
+
   mlx_ptr = mlx_init();
-  win_ptr = mlx_new_window(mlx_ptr, 2000, 1000, "it works!");
+  win_ptr = mlx_new_window(mlx_ptr, width, height, "Fil de Fer");
 
   //line(316, 499, 310 , 513, mlx_ptr, win_ptr);
-  draw_points(head, 10, 10, mlx_ptr, win_ptr);
+  draw_points(head, width, ratio, mlx_ptr, win_ptr);
 
 
   //mlx_pixel_put(mlx_ptr, win_ptr, 250, 250, 0x33FF9C);
