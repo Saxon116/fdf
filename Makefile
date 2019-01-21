@@ -6,7 +6,7 @@
 #    By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/13 12:50:22 by nkellum           #+#    #+#              #
-#    Updated: 2019/01/17 10:46:54 by nkellum          ###   ########.fr        #
+#    Updated: 2019/01/21 19:01:21 by nkellum          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,11 @@ $(NAME):
 	@cc -o $(NAME) -I /usr/local/include $(SRC) -L ./minilibx -lmlx \
 	-framework OpenGL -framework AppKit libft/libft.a
 	@echo "${_GREEN}Compiled fdf${_END}"
+
+linux: fclean
+	@gcc -o $(NAME) main.c libft/libft.a -L./minilibx_linux -lmlx \
+	-L/usr/include/../lib -lXext -lX11 -lm -lbsd
+	@echo "\e[36mCompiled fdf for Linux\e[0m"
 
 %.o: %.c libft.h
 	@gcc $(FLAGS) -o $@ -c $<
