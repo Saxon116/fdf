@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/21 23:51:27 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/22 12:59:13 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ void draw_points(t_list *head, int width, float ratio, void *mlx_ptr, void *win_
 
       i++;
     }
+    
     free(elements);
     free(nextelements);
     i = 0;
