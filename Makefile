@@ -6,7 +6,7 @@
 #    By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/13 12:50:22 by nkellum           #+#    #+#              #
-#    Updated: 2019/01/22 12:59:40 by nkellum          ###   ########.fr        #
+#    Updated: 2019/01/22 14:45:31 by nkellum          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,8 +33,8 @@ _WHITE=\x1b[37m
 
 all: $(NAME)
 
-$(NAME): main.c
-	@#-@ make -C libft
+$(NAME): main.c 
+	@ make -C libft
 	@#@echo "${_YELLOW}Compiled Libft${_END}"
 	@cc -o $(NAME) -I /usr/local/include $(SRC) -L ./minilibx -lmlx \
 	-framework OpenGL -framework AppKit libft/libft.a
