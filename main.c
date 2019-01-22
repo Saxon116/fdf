@@ -6,17 +6,16 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/22 12:59:13 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/22 17:04:00 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minilibx/mlx.h"
-#include "libft/libft.h"
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
+#include "fdf.h"
+
+unsigned long createRGB(int r, int g, int b)
+{
+    return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+}
 
 void line(int x1, int y1, int x2, int y2, void *mlx_ptr, void *win_ptr)
 {
@@ -29,7 +28,7 @@ void line(int x1, int y1, int x2, int y2, void *mlx_ptr, void *win_ptr)
   while(x != x2)
   {
     mlx_pixel_put(mlx_ptr, win_ptr, x,
-      (y1 + ((y2-y1)*(x-x1))/(x2-x1)), 0x33FF9C);
+      (y1 + ((y2-y1)*(x-x1))/(x2-x1)), createRGB(255, 255, 255));
       x += direction;
   }
 }
@@ -100,17 +99,6 @@ t_list *get_head (int fd)
 		list = list->next;
 	}
   return (head);
-
-  // printf("Printing file through linked list...\n");
-	// while(head)
-	// {
-  //
-	// 	printf("[%s]\n", (char *) head->content);
-	// 	index++;
-	// 	head = head->next;
-	// }
-	// printf("Done.\n");
-
 }
 
 void draw_points(t_list *head, int width, float ratio, void *mlx_ptr, void *win_ptr)
@@ -134,13 +122,13 @@ void draw_points(t_list *head, int width, float ratio, void *mlx_ptr, void *win_
       // - (j * scale * 1.7), startY + (i * scale) + (j * scale)
       // - ft_atoi(elements[i]) * 10, 0x33FF9C);
 
-      line(ratio + (i * scale * 1.7)
+      drawLine(ratio + (i * scale * 1.7)
       - (j * scale * 1.7), startY + (i * scale) + (j * scale)
       - ft_atoi(elements[i]) * 10, ratio + ((i + 1) * scale * 1.7)
       - (j * scale * 1.7), startY + ((i + 1) * scale) + (j * scale)
       - ft_atoi(elements[i + 1]) * 10, mlx_ptr, win_ptr);
 
-      line(ratio + (i * scale * 1.7)
+      drawLine(ratio + (i * scale * 1.7)
       - (j * scale * 1.7), startY + (i * scale) + (j * scale)
       - ft_atoi(elements[i]) * 10, ratio + (i * scale * 1.7)
       - ((j + 1) * scale * 1.7), startY + (i * scale) + ((j + 1) * scale)
@@ -148,7 +136,6 @@ void draw_points(t_list *head, int width, float ratio, void *mlx_ptr, void *win_
 
       i++;
     }
-    
     free(elements);
     free(nextelements);
     i = 0;
@@ -173,6 +160,7 @@ int main(int argc, char **argv)
 	int width;
 	int height;
 	int ratio;
+  char buf[1];
 
   if(argc != 2)
 	{
@@ -180,6 +168,13 @@ int main(int argc, char **argv)
 		return (0);
 	}
   fd = open(argv[1], O_RDONLY);
+
+  if(fd < 0 || read(fd, buf , 0) < 0)
+  {
+    printf("Not a valid file.\n");
+    return (0);
+  }
+
   head = get_head(fd);
 
 	width = num_of_elements(head->content);
@@ -187,7 +182,7 @@ int main(int argc, char **argv)
 	ratio = height;
 	ratio *= 17;
 
-	printf("width is %d and height is %d ratio is %d\n", width, height, ratio);
+	//printf("width is %d and height is %d ratio is %d\n", width, height, ratio);
 
 	width = (17 * num_of_elements(head->content)) + (17 * list_length(head));
 	height = width / 1.75;

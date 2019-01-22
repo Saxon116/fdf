@@ -6,12 +6,12 @@
 #    By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/13 12:50:22 by nkellum           #+#    #+#              #
-#    Updated: 2019/01/22 14:45:31 by nkellum          ###   ########.fr        #
+#    Updated: 2019/01/22 16:34:27 by nkellum          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-SRC = main.c
+SRC = main.c line.c
 OBJ = $(SRC:.c=.o)
 
 # This is a minimal set of ANSI/VT100 color codes
@@ -33,16 +33,16 @@ _WHITE=\x1b[37m
 
 all: $(NAME)
 
-$(NAME): main.c 
+$(NAME): $(SRC)
 	@ make -C libft
 	@#@echo "${_YELLOW}Compiled Libft${_END}"
 	@cc -o $(NAME) -I /usr/local/include $(SRC) -L ./minilibx -lmlx \
-	-framework OpenGL -framework AppKit libft/libft.a
+	-lm -framework OpenGL -framework AppKit libft/libft.a
 	@echo "${_GREEN}Compiled fdf${_END}"
 
-linux: fclean
+linux: $(SRC)
 	@gcc -o $(NAME) main.c libft/libft.a -L./minilibx_linux -lmlx \
-	-L/usr/include/../lib -lXext -lX11 -lm -lbsd
+	-lm -L/usr/include/../lib -lXext -lX11 -lm -lbsd
 	@echo "\e[36mCompiled fdf for Linux\e[0m"
 
 %.o: %.c libft.h
