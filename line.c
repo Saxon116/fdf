@@ -6,15 +6,28 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:09:46 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/22 17:11:38 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/23 18:18:33 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void plot(int x, int y, int color, void *mlx_ptr, void *win_ptr)
+void fill_pixel(char *img_str, int x, int y, int color)
 {
-  mlx_pixel_put(mlx_ptr, win_ptr, x, y, color);
+    int index = 4 * (y * 1500) + 4 * x;
+    if(x > 1500 || y > 1000)
+    {
+      //printf("Trying to draw out of bounds.\n");
+      return;
+    }
+    img_str[index] =  (char) (color >> 16);
+    img_str[index + 1] =  (char) ((color & 0x00ff00) >> 8);
+    img_str[index + 2] =  (char) (color & 0x0000ff);
+}
+
+void plot(int x, int y, int color, char *img_str)
+{
+  fill_pixel(img_str, x, y, color);
 }
 
 double ipart(double x)
@@ -44,7 +57,7 @@ void swap(int *x, int *y)
   *y = temp;
 }
 
-void drawLine(int x0 , int y0 , int x1 , int y1, void *mlx_ptr, void *win_ptr)
+void drawLine(int x0 , int y0 , int x1 , int y1, char *img_str)
 {
     int steep = abs(y1 - y0) > abs(x1 - x0) ;
 
@@ -81,9 +94,9 @@ void drawLine(int x0 , int y0 , int x1 , int y1, void *mlx_ptr, void *win_ptr)
             // pixel coverage is determined by fractional
             // part of y co-ordinate
             plot(ipart(intersectY), x,
-                        0xFFFFFF, mlx_ptr, win_ptr);
+                        0xFFFFFF, img_str);
             plot(ipart(intersectY)-1, x,
-                        0xFFFFFF, mlx_ptr, win_ptr);
+                        0xFFFFFF, img_str);
             intersectY += gradient;
         }
     }
@@ -95,9 +108,9 @@ void drawLine(int x0 , int y0 , int x1 , int y1, void *mlx_ptr, void *win_ptr)
             // pixel coverage is determined by fractional
             // part of y co-ordinate
             plot(x, ipart(intersectY),
-                        0xFFFFFF, mlx_ptr, win_ptr);
+                        0xFFFFFF, img_str);
             plot(x, ipart(intersectY)-1,
-                          0x0FFFFFF, mlx_ptr, win_ptr);
+                          0x0FFFFFF, img_str);
             intersectY += gradient;
         }
     }

@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/22 17:04:00 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/23 18:20:04 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,13 @@ unsigned long createRGB(int r, int g, int b)
     return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
 }
 
-void line(int x1, int y1, int x2, int y2, void *mlx_ptr, void *win_ptr)
-{
-  float x;
-  float direction;
-
-  //printf("line: x1 = %f y1 = %f x2 = %f y2 = %f\n", x1, y1, x2, y2);
-  direction = (x2 - x1) < 0 ? -1 : 1;
-  x = x1;
-  while(x != x2)
-  {
-    mlx_pixel_put(mlx_ptr, win_ptr, x,
-      (y1 + ((y2-y1)*(x-x1))/(x2-x1)), createRGB(255, 255, 255));
-      x += direction;
-  }
-}
-
-
 int deal_key(int key, void *param)
 {
   //printf("keycode is %d\n", key);
   if(key == 53 || key == 65307)
     exit(0);
+
+
   return (0);
 }
 
@@ -101,16 +86,18 @@ t_list *get_head (int fd)
   return (head);
 }
 
-void draw_points(t_list *head, int width, float ratio, void *mlx_ptr, void *win_ptr)
+void draw_points(t_list *head, int width, float ratio, char *img_str)
 {
   int i = 0;
   int j = 0;
-  float scale = 10;
+  float scale = 30;
   t_list *list;
   char **elements;
   char **nextelements;
-	int startY = 1;
+	int startY = 100;
   list = head;
+
+  ratio = 500;
 
   while(list->next)
 	{
@@ -122,17 +109,32 @@ void draw_points(t_list *head, int width, float ratio, void *mlx_ptr, void *win_
       // - (j * scale * 1.7), startY + (i * scale) + (j * scale)
       // - ft_atoi(elements[i]) * 10, 0x33FF9C);
 
+
       drawLine(ratio + (i * scale * 1.7)
       - (j * scale * 1.7), startY + (i * scale) + (j * scale)
       - ft_atoi(elements[i]) * 10, ratio + ((i + 1) * scale * 1.7)
       - (j * scale * 1.7), startY + ((i + 1) * scale) + (j * scale)
-      - ft_atoi(elements[i + 1]) * 10, mlx_ptr, win_ptr);
+      - ft_atoi(elements[i + 1]) * 10, img_str);
 
       drawLine(ratio + (i * scale * 1.7)
       - (j * scale * 1.7), startY + (i * scale) + (j * scale)
       - ft_atoi(elements[i]) * 10, ratio + (i * scale * 1.7)
       - ((j + 1) * scale * 1.7), startY + (i * scale) + ((j + 1) * scale)
-      - ft_atoi(nextelements[i]) * 10, mlx_ptr, win_ptr);
+      - ft_atoi(nextelements[i]) * 10, img_str);
+
+      // OBLIQUE PARALLEL PROJECTION
+
+      // drawLine(ratio + (j * (-scale/2)) + (i * scale),
+      // startY + (j * (scale/2))
+      // - ft_atoi(elements[i]) * 10, ratio + (j * (-scale/2)) + ((i + 1) * scale)
+      // , startY + (j * (scale/2))
+      // - ft_atoi(elements[i + 1]) * 10, img_str);
+      //
+      // drawLine(ratio + (j * - (scale/2)) + (i * scale),
+      // startY + (j * (scale/2))
+      // - ft_atoi(elements[i]) * 10, ratio + ((j + 1) * - (scale/2)) + (i * scale)
+      // , startY + ((j + 1) * (scale/2))
+      // - ft_atoi(nextelements[i]) * 10, img_str);
 
       i++;
     }
@@ -145,22 +147,27 @@ void draw_points(t_list *head, int width, float ratio, void *mlx_ptr, void *win_
 
 }
 
-
-
 int main(int argc, char **argv)
 {
   int        fd;
   void *mlx_ptr;
   void *win_ptr;
+  void *img_ptr;
   char *firstline;
   char **array;
   t_list *head;
-  float scale = 50;
+  float scale = 30;
   int i = 0;
-	int width;
-	int height;
+	int width = 1500;
+	int height = 1000;
 	int ratio;
+  int bpp;
+  int size_line;
+  int endian;
+  char *img_str;
   char buf[1];
+
+
 
   if(argc != 2)
 	{
@@ -177,26 +184,27 @@ int main(int argc, char **argv)
 
   head = get_head(fd);
 
-	width = num_of_elements(head->content);
-	height = list_length(head);
-	ratio = height;
-	ratio *= 17;
+	// width = num_of_elements(head->content);
+	// height = list_length(head);
+	// ratio = height;
+	// ratio *= 17;
 
 	//printf("width is %d and height is %d ratio is %d\n", width, height, ratio);
 
-	width = (17 * num_of_elements(head->content)) + (17 * list_length(head));
-	height = width / 1.75;
-
-
-
+	// width = (17 * num_of_elements(head->content)) + (17 * list_length(head));
+	// height = width / 1.75;
 
 
   mlx_ptr = mlx_init();
   win_ptr = mlx_new_window(mlx_ptr, width, height, "Fil de Fer");
 
-  //line(316, 499, 310 , 513, mlx_ptr, win_ptr);
-  draw_points(head, width, ratio, mlx_ptr, win_ptr);
+  img_ptr = mlx_new_image(mlx_ptr, width, height);
+  img_str =  mlx_get_data_addr(img_ptr, &(bpp), &(size_line), &(endian));
 
+  //line(316, 499, 310 , 513, mlx_ptr, win_ptr);
+  draw_points(head, width, ratio, img_str);
+
+  mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 0, 0);
 
   //mlx_pixel_put(mlx_ptr, win_ptr, 250, 250, 0x33FF9C);
   mlx_key_hook(win_ptr, deal_key, (void *)0);
