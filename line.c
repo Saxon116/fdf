@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:09:46 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/23 18:18:33 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/24 15:49:06 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void fill_pixel(char *img_str, int x, int y, int color)
 {
-    int index = 4 * (y * 1500) + 4 * x;
-    if(x > 1500 || y > 1000)
+    int index = 4 * (y * 1200) + 4 * x;
+    if(x > 1200 || y > 700)
     {
       //printf("Trying to draw out of bounds.\n");
       return;

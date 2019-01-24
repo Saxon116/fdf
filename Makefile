@@ -6,7 +6,7 @@
 #    By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/13 12:50:22 by nkellum           #+#    #+#              #
-#    Updated: 2019/01/22 16:34:27 by nkellum          ###   ########.fr        #
+#    Updated: 2019/01/24 15:47:23 by nkellum          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,8 @@ $(NAME): $(SRC)
 	@echo "${_GREEN}Compiled fdf${_END}"
 
 linux: $(SRC)
-	@gcc -o $(NAME) main.c libft/libft.a -L./minilibx_linux -lmlx \
+	@ make -C libft
+	@gcc -o $(NAME) $(SRC) libft/libft.a -L./minilibx_linux -lmlx \
 	-lm -L/usr/include/../lib -lXext -lX11 -lm -lbsd
 	@echo "\e[36mCompiled fdf for Linux\e[0m"
 

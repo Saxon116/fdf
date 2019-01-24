@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:31:29 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/23 16:28:25 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/24 16:12:41 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <math.h>
+
+typedef struct		s_mlx
+{
+	void			*mlx_ptr;
+	void			*win_ptr;
+	void			*img_ptr;
+	char			*img_str;
+	struct s_mlx	*next;
+}					t_mlx;
 
 void drawLine(int x0 , int y0 , int x1 , int y1, char *img_str);
 

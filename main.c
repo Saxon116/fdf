@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/23 18:20:04 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/24 16:22:43 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,15 @@ void draw_points(t_list *head, int width, float ratio, char *img_str)
 {
   int i = 0;
   int j = 0;
-  float scale = 30;
+  float scale = 7;
   t_list *list;
   char **elements;
   char **nextelements;
-	int startY = 100;
+	int startY = 50;
   list = head;
 
-  ratio = 500;
+  ratio = 600;
+	printf("didn't segfault yet\n");
 
   while(list->next)
 	{
@@ -150,16 +151,17 @@ void draw_points(t_list *head, int width, float ratio, char *img_str)
 int main(int argc, char **argv)
 {
   int        fd;
+	t_mlx *mlx;
   void *mlx_ptr;
   void *win_ptr;
   void *img_ptr;
   char *firstline;
   char **array;
   t_list *head;
-  float scale = 30;
+  float scale = 10;
   int i = 0;
-	int width = 1500;
-	int height = 1000;
+	int width = 1200;
+	int height = 700;
 	int ratio;
   int bpp;
   int size_line;
@@ -193,22 +195,28 @@ int main(int argc, char **argv)
 
 	// width = (17 * num_of_elements(head->content)) + (17 * list_length(head));
 	// height = width / 1.75;
+	printf("didn't segfault yet 1 \n");
 
 
   mlx_ptr = mlx_init();
-  win_ptr = mlx_new_window(mlx_ptr, width, height, "Fil de Fer");
+	//mlx->mlx_ptr = mlx_ptr;
 
-  img_ptr = mlx_new_image(mlx_ptr, width, height);
-  img_str =  mlx_get_data_addr(img_ptr, &(bpp), &(size_line), &(endian));
+	printf("didn't segfault yet 2\n");
+
+
+	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, width, height, "Fil de Fer");
+
+  mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, width, height);
+  mlx->img_str =  mlx_get_data_addr(mlx->img_ptr, &(bpp), &(size_line), &(endian));
 
   //line(316, 499, 310 , 513, mlx_ptr, win_ptr);
-  draw_points(head, width, ratio, img_str);
+  draw_points(head, width, ratio, mlx->img_str);
 
-  mlx_put_image_to_window(mlx_ptr, win_ptr, img_ptr, 0, 0);
+  mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
 
   //mlx_pixel_put(mlx_ptr, win_ptr, 250, 250, 0x33FF9C);
-  mlx_key_hook(win_ptr, deal_key, (void *)0);
+  mlx_key_hook(mlx->win_ptr, deal_key, (void *)0);
 
-  mlx_loop(mlx_ptr);
+  mlx_loop(mlx->mlx_ptr);
 
 }
