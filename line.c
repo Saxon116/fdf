@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:09:46 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/25 14:58:34 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/25 16:21:27 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ void fill_pixel(t_mlx *mlx, int x, int y, int amplitude)
     color = createRGB(mlx->crazy_rainbow_r,
       mlx->crazy_rainbow_g, mlx->crazy_rainbow_b);
 
-    mlx->img_str[index] =  (char) (color >> 16);
-    mlx->img_str[index + 1] =  (char) (color & 0x00ff00) >> 8;
-    mlx->img_str[index + 2] =  (char) (color & 0x0000ff);
+    mlx->img_str[index] =  mlx->crazy_rainbow_r;
+    mlx->img_str[index + 1] =  mlx->crazy_rainbow_g;
+    mlx->img_str[index + 2] =  mlx->crazy_rainbow_b;
 }
 
 void plot(int x, int y, t_mlx *mlx, int amplitude)

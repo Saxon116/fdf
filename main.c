@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/25 15:02:44 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/25 16:22:11 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,9 +139,10 @@ int deal_key(int key, void *param)
   }
   if(key == 15)
   {
-    mlx->crazy_rainbow_r += random();
-    mlx->crazy_rainbow_g += random();
-    mlx->crazy_rainbow_b += random();
+    //printf("random is %ld\n", random() % 255);
+    mlx->crazy_rainbow_r = random() % 255;
+    mlx->crazy_rainbow_g = random() % 255;
+    mlx->crazy_rainbow_b = random() % 255;
 
     mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
     mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
@@ -259,7 +260,7 @@ int main(int argc, char **argv)
   mlx->startY = 100;
   mlx->color = 0xFFFFFF;
   mlx->crazy_rainbow_r = 0;
-  mlx->crazy_rainbow_g = 0;
+  mlx->crazy_rainbow_g = 255;
   mlx->crazy_rainbow_b = 0;
 
 	// width = num_of_elements(head->content);
