@@ -6,28 +6,39 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:09:46 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/24 15:49:06 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/25 14:58:34 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void fill_pixel(char *img_str, int x, int y, int color)
+unsigned long createRGB(int r, int g, int b)
+{
+    return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+}
+
+void fill_pixel(t_mlx *mlx, int x, int y, int amplitude)
 {
     int index = 4 * (y * 1200) + 4 * x;
-    if(x > 1200 || y > 700)
+    int color;
+    if(x >= 1200 || x <= 0 || y >= 700 || y <= 0)
     {
       //printf("Trying to draw out of bounds.\n");
       return;
     }
-    img_str[index] =  (char) (color >> 16);
-    img_str[index + 1] =  (char) ((color & 0x00ff00) >> 8);
-    img_str[index + 2] =  (char) (color & 0x0000ff);
+    //printf("x is %d y is %d\n", x % 100, amplitude);
+    //printf("amplitude is %d\n", amplitude);
+    color = createRGB(mlx->crazy_rainbow_r,
+      mlx->crazy_rainbow_g, mlx->crazy_rainbow_b);
+
+    mlx->img_str[index] =  (char) (color >> 16);
+    mlx->img_str[index + 1] =  (char) (color & 0x00ff00) >> 8;
+    mlx->img_str[index + 2] =  (char) (color & 0x0000ff);
 }
 
-void plot(int x, int y, int color, char *img_str)
+void plot(int x, int y, t_mlx *mlx, int amplitude)
 {
-  fill_pixel(img_str, x, y, color);
+  fill_pixel(mlx, x, y, amplitude);
 }
 
 double ipart(double x)
@@ -57,7 +68,7 @@ void swap(int *x, int *y)
   *y = temp;
 }
 
-void drawLine(int x0 , int y0 , int x1 , int y1, char *img_str)
+void drawLine(int x0 , int y0 , int x1 , int y1, int amplitude, t_mlx *mlx)
 {
     int steep = abs(y1 - y0) > abs(x1 - x0) ;
 
@@ -93,10 +104,8 @@ void drawLine(int x0 , int y0 , int x1 , int y1, char *img_str)
         {
             // pixel coverage is determined by fractional
             // part of y co-ordinate
-            plot(ipart(intersectY), x,
-                        0xFFFFFF, img_str);
-            plot(ipart(intersectY)-1, x,
-                        0xFFFFFF, img_str);
+            plot(ipart(intersectY), x,  mlx, amplitude);
+            plot(ipart(intersectY)-1, x, mlx, amplitude);
             intersectY += gradient;
         }
     }
@@ -107,10 +116,8 @@ void drawLine(int x0 , int y0 , int x1 , int y1, char *img_str)
         {
             // pixel coverage is determined by fractional
             // part of y co-ordinate
-            plot(x, ipart(intersectY),
-                        0xFFFFFF, img_str);
-            plot(x, ipart(intersectY)-1,
-                          0x0FFFFFF, img_str);
+            plot(x, ipart(intersectY), mlx, amplitude);
+            plot(x, ipart(intersectY)-1, mlx, amplitude);
             intersectY += gradient;
         }
     }
