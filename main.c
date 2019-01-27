@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/25 16:22:11 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/27 18:58:37 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,33 +32,33 @@ void draw_points(t_list *head, int width, t_mlx *mlx)
       // - ft_atoi(elements[i]) * 10, 0x33FF9C);
 
 
-      drawLine(mlx->startX + (i * mlx->scale * 1.7)
-      - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
-      - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((i + 1) * mlx->scale * 1.7)
-      - (j * mlx->scale * 1.7), mlx->startY + ((i + 1) * mlx->scale) + (j * mlx->scale)
-      - ft_atoi(elements[i + 1]) * mlx->scale* mlx->amplitude,
-      ft_atoi(nextelements[i]) * 10, mlx);
-
-      drawLine(mlx->startX + (i * mlx->scale * 1.7)
-      - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
-      - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (i * mlx->scale * 1.7)
-      - ((j + 1) * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + ((j + 1) * mlx->scale)
-      - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude,
-      ft_atoi(nextelements[i]) * 10, mlx);
+      // drawLine(mlx->startX + (i * mlx->scale * 1.7)
+      // - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
+      // - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((i + 1) * mlx->scale * 1.7)
+      // - (j * mlx->scale * 1.7), mlx->startY + ((i + 1) * mlx->scale) + (j * mlx->scale)
+      // - ft_atoi(elements[i + 1]) * mlx->scale* mlx->amplitude,
+      // ft_atoi(nextelements[i]) * 10, mlx);
+			//
+      // drawLine(mlx->startX + (i * mlx->scale * 1.7)
+      // - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
+      // - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (i * mlx->scale * 1.7)
+      // - ((j + 1) * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + ((j + 1) * mlx->scale)
+      // - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude,
+      // ft_atoi(nextelements[i]) * 10, mlx);
 
       // OBLIQUE PARALLEL PROJECTION
 
-      // drawLine(mlx->startX + (j * (-mlx->scale/2)) + (i * mlx->scale),
-      // mlx->startY + (j * (mlx->scale/2))
-      // - ft_atoi(elements[i]) * 10, mlx->startX + (j * (-mlx->scale/2)) + ((i + 1) * mlx->scale)
-      // , mlx->startY + (j * (mlx->scale/2))
-      // - ft_atoi(elements[i + 1]) * 10, img_str);
-      //
-      // drawLine(mlx->startX + (j * - (mlx->scale/2)) + (i * mlx->scale),
-      // mlx->startY + (j * (mlx->scale/2))
-      // - ft_atoi(elements[i]) * 10, mlx->startX + ((j + 1) * - (mlx->scale/2)) + (i * mlx->scale)
-      // , mlx->startY + ((j + 1) * (mlx->scale/2))
-      // - ft_atoi(nextelements[i]) * 10, img_str);
+      drawLine(mlx->startX + (j * (-mlx->scale/2)) + (i * mlx->scale),
+      mlx->startY + (j * (mlx->scale/2))
+      - ft_atoi(elements[i]) * 10, mlx->startX + (j * (-mlx->scale/2)) + ((i + 1) * mlx->scale)
+      , mlx->startY + (j * (mlx->scale/2))
+      - ft_atoi(elements[i + 1]) * 10, ft_atoi(elements[i + 1]) * 10, mlx);
+
+      drawLine(mlx->startX + (j * - (mlx->scale/2)) + (i * mlx->scale),
+      mlx->startY + (j * (mlx->scale/2))
+      - ft_atoi(elements[i]) * 10, mlx->startX + ((j + 1) * - (mlx->scale/2)) + (i * mlx->scale)
+      , mlx->startY + ((j + 1) * (mlx->scale/2))
+      - ft_atoi(nextelements[i]) * 10, ft_atoi(elements[i + 1]) * 10, mlx);
 
       i++;
     }
@@ -71,14 +71,24 @@ void draw_points(t_list *head, int width, t_mlx *mlx)
 
 }
 
+void redraw(t_mlx *mlx)
+{
+	mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
+	mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
+	mlx->img_str =  mlx_get_data_addr(mlx->img_ptr,
+		&(mlx->bpp), &(mlx->size_line), &(mlx->endian));
+	draw_points(mlx->head, 1200, mlx);
+	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
+}
 
 int deal_key(int key, void *param)
 {
   t_mlx *mlx;
   double direction;
 
+	printf("key is %d\n", key);
+
   direction = 0;
-  //printf("key is %d\n", key);
   mlx = (t_mlx *) param;
   if(key == 53 || key == 65307)
     exit(0);
@@ -86,72 +96,35 @@ int deal_key(int key, void *param)
   {
     direction = key == 69 ? 1 : -1;
     mlx->scale += direction;
-    mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
-    mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
-    mlx->img_str =  mlx_get_data_addr(mlx->img_ptr,
-      &(mlx->bpp), &(mlx->size_line), &(mlx->endian));
-
-    draw_points(mlx->head, 1200, mlx);
-
-    mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
+		redraw(mlx);
   }
 
   if(key == 126 || key == 125)
   {
     direction = key == 125 ? 10 : -10;
     mlx->startY += direction;
-    mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
-    mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
-    mlx->img_str =  mlx_get_data_addr(mlx->img_ptr,
-      &(mlx->bpp), &(mlx->size_line), &(mlx->endian));
-
-    draw_points(mlx->head, 1200, mlx);
-
-    mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
+    redraw(mlx);
   }
 
   if(key == 123 || key == 124)
   {
     direction = key == 124 ? 10 : -10;
     mlx->startX += direction;
-    mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
-    mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
-    mlx->img_str =  mlx_get_data_addr(mlx->img_ptr,
-      &(mlx->bpp), &(mlx->size_line), &(mlx->endian));
-
-    draw_points(mlx->head, 1200, mlx);
-
-    mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
+    redraw(mlx);
   }
 
   if(key == 24 || key == 27)
   {
     direction = key == 24 ? 0.1 : -0.1;
     mlx->amplitude += direction;
-    mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
-    mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
-    mlx->img_str =  mlx_get_data_addr(mlx->img_ptr,
-      &(mlx->bpp), &(mlx->size_line), &(mlx->endian));
-
-    draw_points(mlx->head, 1200, mlx);
-
-    mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
+    redraw(mlx);
   }
   if(key == 15)
   {
-    //printf("random is %ld\n", random() % 255);
     mlx->crazy_rainbow_r = random() % 255;
     mlx->crazy_rainbow_g = random() % 255;
     mlx->crazy_rainbow_b = random() % 255;
-
-    mlx_destroy_image(mlx->mlx_ptr, mlx->img_ptr);
-    mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
-    mlx->img_str =  mlx_get_data_addr(mlx->img_ptr,
-      &(mlx->bpp), &(mlx->size_line), &(mlx->endian));
-
-    draw_points(mlx->head, 1200, mlx);
-
-    mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
+    redraw(mlx);
   }
   return (0);
 }
@@ -275,7 +248,6 @@ int main(int argc, char **argv)
 
 
   //mlx_ptr = mlx_init();
-
 
 	mlx->mlx_ptr = mlx_init();
 
