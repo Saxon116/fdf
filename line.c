@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:09:46 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/25 16:21:27 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/27 22:58:29 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,15 @@
 unsigned long createRGB(int r, int g, int b)
 {
     return ((r & 0xff) << 16) + ((g & 0xff) << 8) + (b & 0xff);
+}
+
+int constrain(int val, int min, int max)
+{
+	if(val >= max)
+		return (max);
+	if(val <= min)
+		return(min);
+	return (val);
 }
 
 void fill_pixel(t_mlx *mlx, int x, int y, int amplitude)
@@ -27,13 +36,14 @@ void fill_pixel(t_mlx *mlx, int x, int y, int amplitude)
       return;
     }
     //printf("x is %d y is %d\n", x % 100, amplitude);
-    //printf("amplitude is %d\n", amplitude);
-    color = createRGB(mlx->crazy_rainbow_r,
-      mlx->crazy_rainbow_g, mlx->crazy_rainbow_b);
+		//if(amplitude)
+    	//printf("amplitude is %d\n", amplitude);
+    // color = createRGB(mlx->crazy_rainbow_r,
+    //   mlx->crazy_rainbow_g, mlx->crazy_rainbow_b);
 
-    mlx->img_str[index] =  mlx->crazy_rainbow_r;
-    mlx->img_str[index + 1] =  mlx->crazy_rainbow_g;
-    mlx->img_str[index + 2] =  mlx->crazy_rainbow_b;
+    mlx->img_str[index] =  constrain(mlx->crazy_rainbow_r + amplitude, 0, 255);
+    mlx->img_str[index + 1] =  constrain(mlx->crazy_rainbow_g + amplitude * 2, 0, 255);
+    mlx->img_str[index + 2] =  constrain(mlx->crazy_rainbow_b + amplitude / 2, 0, 255);
 }
 
 void plot(int x, int y, t_mlx *mlx, int amplitude)

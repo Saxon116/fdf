@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:31:29 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/25 14:34:22 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/27 22:57:58 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct		s_mlx
 	int startX;
 	int startY;
 	int color;
+	int projection;
 	int bpp;
   int size_line;
   int endian;
