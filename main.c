@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/27 22:42:24 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/28 16:50:30 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ void draw_points(t_list *head, int width, t_mlx *mlx)
       - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((i + 1) * mlx->scale * 1.7)
       - (j * mlx->scale * 1.7), mlx->startY + ((i + 1) * mlx->scale) + (j * mlx->scale)
       - ft_atoi(elements[i + 1]) * mlx->scale * mlx->amplitude,
-      ft_atoi(nextelements[i]) * mlx->amplitude * 10, mlx);
+      ft_atoi(nextelements[i + 1]) * mlx->amplitude * 10, mlx);
 
       drawLine(mlx->startX + (i * mlx->scale * 1.7)
       - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
       - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (i * mlx->scale * 1.7)
       - ((j + 1) * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + ((j + 1) * mlx->scale)
       - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude,
-      ft_atoi(nextelements[i]) * mlx->amplitude * 10, mlx);
+      ft_atoi(nextelements[i + 1]) * mlx->amplitude * 10, mlx);
 			}
       // OBLIQUE PARALLEL PROJECTION
 			else
@@ -55,13 +55,13 @@ void draw_points(t_list *head, int width, t_mlx *mlx)
       mlx->startY + (j * (mlx->scale/2))
       - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (j * (-mlx->scale/2)) + ((i + 1) * mlx->scale)
       , mlx->startY + (j * (mlx->scale/2))
-      - ft_atoi(elements[i + 1]) * mlx->scale * mlx->amplitude, ft_atoi(nextelements[i]) * mlx->amplitude * 10, mlx);
+      - ft_atoi(elements[i + 1]) * mlx->scale * mlx->amplitude, ft_atoi(nextelements[i + 1]) * mlx->amplitude * 10, mlx);
 
       drawLine(mlx->startX + (j * - (mlx->scale/2)) + (i * mlx->scale),
       mlx->startY + (j * (mlx->scale/2))
       - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((j + 1) * - (mlx->scale/2)) + (i * mlx->scale)
       , mlx->startY + ((j + 1) * (mlx->scale/2))
-      - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude, ft_atoi(nextelements[i]) * mlx->amplitude * 10, mlx);
+      - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude, ft_atoi(nextelements[i + 1]) * mlx->amplitude * 10, mlx);
 			}
       i++;
     }
@@ -123,7 +123,7 @@ int deal_key(int key, void *param)
     mlx->amplitude += direction;
     redraw(mlx);
   }
-	if(key == 112)
+	if(key == 112 || key == 35)
 	{
 		mlx->projection = !mlx->projection;
 		if(mlx->projection)
@@ -140,44 +140,6 @@ int deal_key(int key, void *param)
     redraw(mlx);
   }
   return (0);
-}
-
-int		num_of_elements(char *s)
-{
-	int words;
-	int i;
-	int isword;
-
-	i = 0;
-	isword = 0;
-	words = 0;
-	while (s[i])
-	{
-		if (s[i] == ' ')
-			isword = 0;
-		else if (!isword)
-		{
-			words++;
-			isword = 1;
-		}
-		i++;
-	}
-	return (words);
-}
-
-int list_length(t_list *head)
-{
-  t_list *list;
-  int length;
-
-  length = 0;
-  list = head;
-  while(list)
-	{
-    length++;
-    list = list->next;
-  }
-  return (length);
 }
 
 t_list *get_head (int fd)
@@ -244,10 +206,9 @@ int main(int argc, char **argv)
   mlx->amplitude = 1;
   mlx->startX = 600;
   mlx->startY = 100;
-  mlx->color = 0xFFFFFF;
-  mlx->crazy_rainbow_r = 100;
-  mlx->crazy_rainbow_g = 50;
-  mlx->crazy_rainbow_b = 0;
+  mlx->crazy_rainbow_r = 150;
+  mlx->crazy_rainbow_g = 100;
+  mlx->crazy_rainbow_b = 50;
 	mlx->projection = 0;
 
 	// width = num_of_elements(head->content);
@@ -277,7 +238,8 @@ int main(int argc, char **argv)
   mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
 
   //mlx_pixel_put(mlx_ptr, win_ptr, 250, 250, 0x33FF9C);
-  mlx_key_hook(mlx->win_ptr, deal_key, mlx);
+  //mlx_key_hook(mlx->win_ptr, deal_key, mlx);
+  mlx_hook(mlx->win_ptr, 2, 0, deal_key, mlx);
 
   mlx_loop(mlx->mlx_ptr);
 
