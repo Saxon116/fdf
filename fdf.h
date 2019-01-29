@@ -6,14 +6,14 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:31:29 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/28 16:59:26 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/29 12:59:42 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-#include "minilibx/mlx.h"
+#include "minilibx_macos/mlx.h"
 #include "libft/libft.h"
 #include <stdio.h>
 #include <sys/types.h>

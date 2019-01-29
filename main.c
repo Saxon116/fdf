@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/29 12:54:53 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/29 13:00:11 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int deal_key(int key, void *param)
 
   if(key == 24 || key == 27 || key == 45 || key == 61)
   {
-    direction = key == 24 || key == 61 ? 0.1 : -0.1;
+    direction = key == 24 || key == 61 ? 0.2 : -0.2;
     mlx->amplitude += direction;
     redraw(mlx);
   }
