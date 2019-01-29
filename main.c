@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/29 12:24:06 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/29 12:54:53 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,35 +84,6 @@ void redraw(t_mlx *mlx)
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
 }
 
-
-void  lstfree(t_list **alst)
-{
-	t_list *current;
-	t_list *next;
-
-	current = *alst;
-	while (current)
-	{
-		next = current->next;
-    if((current)->content)
-		  free(current->content);
-		free(current);
-		current = next;
-	}
-	*alst = NULL;
-}
-
-void free_mlx(t_mlx **mlx)
-{
-  lstfree(&(*mlx)->head);
-  free((*mlx)->mlx_ptr);
-  free((*mlx)->win_ptr);
-  free((*mlx)->img_ptr);
-  free((*mlx)->img_str);
-  free((*mlx));
-  *mlx = NULL;
-}
-
 int deal_key(int key, void *param)
 {
   t_mlx *mlx;
@@ -123,10 +94,8 @@ int deal_key(int key, void *param)
   mlx = (t_mlx *) param;
 
   if(key == 53 || key == 65307)
-  {
-    free_mlx(&mlx);
     exit(0);
-  }
+
   if(key == 69 || key == 78 || key == 65451 || key == 65453)
   {
     direction = key == 69 || key == 65451  ? 1 : -1;
@@ -150,7 +119,7 @@ int deal_key(int key, void *param)
 
   if(key == 24 || key == 27 || key == 45 || key == 61)
   {
-    direction = key == 24 || key == 61 ? 0.2 : -0.2;
+    direction = key == 24 || key == 61 ? 0.1 : -0.1;
     mlx->amplitude += direction;
     redraw(mlx);
   }
@@ -180,15 +149,16 @@ t_list *get_head (int fd)
 	t_list *head;
 	t_list *list;
 
+
   get_next_line(fd, &line);
 	list = ft_lstnew(line, ft_strlen(line) + 1);
-  free(line);
 	head = list;
+
+
 	while (get_next_line(fd, &line))
 	{
 		list->next = ft_lstnew(line, ft_strlen(line) + 1);
 		list = list->next;
-    free(line);
 	}
   return (head);
 }
@@ -269,7 +239,6 @@ int main(int argc, char **argv)
 
   //mlx_pixel_put(mlx_ptr, win_ptr, 250, 250, 0x33FF9C);
   //mlx_key_hook(mlx->win_ptr, deal_key, mlx);
-  free_mlx(&mlx);
   mlx_hook(mlx->win_ptr, 2, 0, deal_key, mlx);
 
   mlx_loop(mlx->mlx_ptr);
