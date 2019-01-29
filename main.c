@@ -6,20 +6,20 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/29 13:00:11 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/29 14:14:05 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void draw_points(t_list *head, int width, t_mlx *mlx)
+void draw_points(t_mlx *mlx)
 {
   int i = 0;
   int j = 0;
   t_list *list;
   char **elements;
   char **nextelements;
-  list = head;
+  list = mlx->head;
 
   while(list->next)
 	{
@@ -39,14 +39,14 @@ void draw_points(t_list *head, int width, t_mlx *mlx)
       - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((i + 1) * mlx->scale * 1.7)
       - (j * mlx->scale * 1.7), mlx->startY + ((i + 1) * mlx->scale) + (j * mlx->scale)
       - ft_atoi(elements[i + 1]) * mlx->scale * mlx->amplitude,
-      ft_atoi(nextelements[i + 1]) * mlx->amplitude * 10, mlx);
+      ft_atoi(elements[i]) * mlx->amplitude * 10, mlx);
 
       drawLine(mlx->startX + (i * mlx->scale * 1.7)
       - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
       - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (i * mlx->scale * 1.7)
       - ((j + 1) * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + ((j + 1) * mlx->scale)
       - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude,
-      ft_atoi(nextelements[i + 1]) * mlx->amplitude * 10, mlx);
+      ft_atoi(elements[i]) * mlx->amplitude * 10, mlx);
 			}
       // OBLIQUE PARALLEL PROJECTION
 			else
@@ -80,8 +80,36 @@ void redraw(t_mlx *mlx)
 	mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
 	mlx->img_str =  mlx_get_data_addr(mlx->img_ptr,
 		&(mlx->bpp), &(mlx->size_line), &(mlx->endian));
-	draw_points(mlx->head, 1200, mlx);
+	draw_points(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
+}
+
+void  lstfree(t_list **alst)
+{
+	t_list *current;
+	t_list *next;
+
+	current = *alst;
+	while (current)
+	{
+		next = current->next;
+    if((current)->content)
+		  free(current->content);
+		free(current);
+		current = next;
+	}
+	*alst = NULL;
+}
+
+void free_mlx(t_mlx *mlx)
+{
+  lstfree(&(mlx)->head);
+  free((mlx)->mlx_ptr);
+  free((mlx)->win_ptr);
+  free((mlx)->img_ptr);
+  free((mlx)->img_str);
+  free((mlx));
+  mlx = NULL;
 }
 
 int deal_key(int key, void *param)
@@ -94,8 +122,10 @@ int deal_key(int key, void *param)
   mlx = (t_mlx *) param;
 
   if(key == 53 || key == 65307)
+  {
+    free_mlx(mlx);
     exit(0);
-
+  }
   if(key == 69 || key == 78 || key == 65451 || key == 65453)
   {
     direction = key == 69 || key == 65451  ? 1 : -1;
@@ -153,12 +183,14 @@ t_list *get_head (int fd)
   get_next_line(fd, &line);
 	list = ft_lstnew(line, ft_strlen(line) + 1);
 	head = list;
+  free(line);
 
 
 	while (get_next_line(fd, &line))
 	{
 		list->next = ft_lstnew(line, ft_strlen(line) + 1);
 		list = list->next;
+    free(line);
 	}
   return (head);
 }
@@ -233,7 +265,7 @@ int main(int argc, char **argv)
   &(mlx->size_line), &(mlx->endian));
 
   //line(316, 499, 310 , 513, mlx_ptr, win_ptr);
-  draw_points(mlx->head, width, mlx);
+  draw_points(mlx);
 
   mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
 
