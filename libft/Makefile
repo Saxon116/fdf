@@ -6,7 +6,7 @@
 #    By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/13 12:50:22 by nkellum           #+#    #+#              #
-#    Updated: 2019/01/22 14:41:40 by nkellum          ###   ########.fr        #
+#    Updated: 2019/01/29 11:38:04 by nkellum          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -163,17 +163,36 @@ get_next_line.c
 
 OBJ = $(SRC:.c=.o)
 
+# This is a minimal set of ANSI/VT100 color codes
+_END=\x1b[0m
+_BOLD=\x1b[1m
+_UNDER=\x1b[4m
+_REV=\x1b[7m
+
+# Colors
+_GREY=\x1b[30m
+_RED=\x1b[31m
+_GREEN=\x1b[32m
+_YELLOW=\x1b[33m
+_BLUE=\x1b[34m
+_PURPLE=\x1b[35m
+_CYAN=\x1b[36m
+_WHITE=\x1b[37m
+
 all: $(NAME)
 
 $(NAME): $(SRC)
-	gcc -Wall -Wextra -Werror -c $(SRC)
-	ar rc $(NAME) $(OBJ)
-	ranlib $(NAME)
+	@gcc -Wall -Wextra -Werror -c $(SRC)
+	@ar rc $(NAME) $(OBJ)
+	@ranlib $(NAME)
+	@echo "${_CYAN}Compiled Libft${_END}"
+	@make clean
+
 
 clean:
-	rm -f $(OBJ)
+	@rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
