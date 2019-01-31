@@ -6,7 +6,7 @@
 #    By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/13 12:50:22 by nkellum           #+#    #+#              #
-#    Updated: 2019/01/29 13:16:16 by nkellum          ###   ########.fr        #
+#    Updated: 2019/01/31 10:49:14 by nkellum          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ all: $(NAME)
 
 $(NAME): $(SRC)
 	@ make -C libft
-	@ make -C minilibx_macos 
+	@ make -C minilibx_macos
 	@cc -o $(NAME) -I /usr/local/include $(SRC) -L ./minilibx_macos -lmlx \
 	-lm -framework OpenGL -framework AppKit libft/libft.a
 	@echo "${_GREEN}Compiled fdf${_END}"
@@ -51,10 +51,11 @@ linux: $(SRC)
 
 clean:
 	@rm -f $(OBJ)
-	@#@make -C libft clean
+	@make -C libft clean
 
 fclean: clean
 	@rm -f $(NAME)
-	@#@make -C libft fclean
+	@make -C libft fclean
+	@make -C minilibx_macos clean
 
 re: fclean all
