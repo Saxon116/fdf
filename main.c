@@ -6,19 +6,56 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/31 15:05:31 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/31 17:53:01 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
+t_mapline	*lstnew(char *content, size_t content_size)
+{
+	t_mapline *t;
+
+	if ((t = malloc(sizeof(t_mapline))) == NULL)
+		return (0);
+	if (content == NULL)
+	{
+		t->content = NULL;
+		t->content_size = 0;
+	}
+	else
+	{
+		if ((t->content = malloc(content_size)) == NULL)
+		{
+			free(t);
+			return (0);
+		}
+		ft_memcpy(t->content, content, content_size);
+		t->content_size = content_size;
+	}
+	t->next = NULL;
+	return (t);
+}
+
+void fill_elements(t_mlx *mlx)
+{
+  t_mapline *list;
+
+  list = mlx->head;
+
+  while(list->next)
+	{
+    list->elements = ft_strsplit((char *) list->content, ' ');
+    list->nextelements = ft_strsplit((char *) list->next->content, ' ');
+    list = list->next;
+  }
+}
+
 void draw_points(t_mlx *mlx)
 {
-
-
   int i = 0;
   int j = 0;
-  t_list *list;
+  t_mapline *list;
   char **elements;
   char **nextelements;
   list = mlx->head;
@@ -26,25 +63,24 @@ void draw_points(t_mlx *mlx)
 
   while(list->next)
 	{
-		elements = ft_strsplit((char *) list->content, ' ');
-    nextelements = ft_strsplit((char *) list->next->content, ' ');
-    while(nextelements[i] && nextelements[i + 1] && elements[i] && elements[i + 1])
+
+    while(list->nextelements[i] && list->nextelements[i + 1] && list->elements[i] && list->elements[i + 1])
     {
 			if(!mlx->projection)
 			{
         drawLine(mlx->startX + (i * mlx->scale * 1.7)
         - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
-        - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((i + 1) * mlx->scale * 1.7)
+        - ft_atoi(list->elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((i + 1) * mlx->scale * 1.7)
         - (j * mlx->scale * 1.7), mlx->startY + ((i + 1) * mlx->scale) + (j * mlx->scale)
-        - ft_atoi(elements[i + 1]) * mlx->scale * mlx->amplitude,
-        ft_max(ft_atoi(elements[i]), ft_atoi(elements[i+1])) * mlx->amplitude * 10, mlx);
+        - ft_atoi(list->elements[i + 1]) * mlx->scale * mlx->amplitude,
+        ft_max(ft_atoi(list->elements[i]), ft_atoi(list->elements[i+1])) * mlx->amplitude * 10, mlx);
 
         drawLine(mlx->startX + (i * mlx->scale * 1.7)
         - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
-        - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (i * mlx->scale * 1.7)
+        - ft_atoi(list->elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (i * mlx->scale * 1.7)
         - ((j + 1) * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + ((j + 1) * mlx->scale)
-        - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude,
-        ft_max(ft_atoi(elements[i]), ft_atoi(nextelements[i])) * mlx->amplitude * 10, mlx);
+        - ft_atoi(list->nextelements[i]) * mlx->scale * mlx->amplitude,
+        ft_max(ft_atoi(list->elements[i]), ft_atoi(list->nextelements[i])) * mlx->amplitude * 10, mlx);
 
 			}
       // OBLIQUE PARALLEL PROJECTION
@@ -52,26 +88,20 @@ void draw_points(t_mlx *mlx)
 			{
         drawLine(mlx->startX + (j * (-mlx->scale/2)) + (i * mlx->scale),
         mlx->startY + (j * (mlx->scale/2))
-        - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (j * (-mlx->scale/2)) + ((i + 1) * mlx->scale)
+        - ft_atoi(list->elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (j * (-mlx->scale/2)) + ((i + 1) * mlx->scale)
         , mlx->startY + (j * (mlx->scale/2))
-        - ft_atoi(elements[i + 1]) * mlx->scale * mlx->amplitude,
-        ft_max(ft_atoi(elements[i]), ft_atoi(elements[i+1])) * mlx->amplitude * 10, mlx);
+        - ft_atoi(list->elements[i + 1]) * mlx->scale * mlx->amplitude,
+        ft_max(ft_atoi(list->elements[i]), ft_atoi(list->elements[i+1])) * mlx->amplitude * 10, mlx);
 
         drawLine(mlx->startX + (j * - (mlx->scale/2)) + (i * mlx->scale),
         mlx->startY + (j * (mlx->scale/2))
-        - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((j + 1) * - (mlx->scale/2)) + (i * mlx->scale)
+        - ft_atoi(list->elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((j + 1) * - (mlx->scale/2)) + (i * mlx->scale)
         , mlx->startY + ((j + 1) * (mlx->scale/2))
-        - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude,
-        ft_max(ft_atoi(elements[i]), ft_atoi(nextelements[i])) * mlx->amplitude * 10, mlx);
+        - ft_atoi(list->nextelements[i]) * mlx->scale * mlx->amplitude,
+        ft_max(ft_atoi(list->elements[i]), ft_atoi(list->nextelements[i])) * mlx->amplitude * 10, mlx);
 			}
-      free(elements[i]);
-      free(nextelements[i]);
       i++;
     }
-    free(elements[i]);
-    free(nextelements[i]);
-    free(elements);
-    free(nextelements);
     i = 0;
 		j++;
 		list = list->next;
@@ -99,10 +129,10 @@ void redraw(t_mlx *mlx)
   display_controls(mlx);
 }
 
-void  lstfree(t_list **alst)
+void  lstfree(t_mapline **alst)
 {
-	t_list *current;
-	t_list *next;
+	t_mapline *current;
+	t_mapline *next;
 
 	current = *alst;
 	while (current)
@@ -129,7 +159,7 @@ int deal_key(int key, void *param)
       exit(0);
   if(key == 69 || key == 78 || key == 65451 || key == 65453)
   {
-    direction = key == 69 || key == 65451  ? 1 : -1;
+    direction = key == 69 || key == 65451  ? .2 : -.2;
     if(mlx->scale + direction >= 0)
       mlx->scale += direction;
 		redraw(mlx);
@@ -168,46 +198,33 @@ int deal_key(int key, void *param)
 
   if(key == 8 || key == 114)
   {
-    mlx->crazy_rainbow_r = random() % 255;
-    mlx->crazy_rainbow_g = random() % 255;
-    mlx->crazy_rainbow_b = random() % 255;
+    mlx->crazy_rainbow_r = random() / 2 % 255;
+    mlx->crazy_rainbow_g = random() / 2 % 255;
+    mlx->crazy_rainbow_b = random() / 2 % 255;
     redraw(mlx);
   }
   return (0);
 }
 
-t_list *get_head (int fd)
+t_mapline *get_head (int fd)
 {
   int i = 0;
 	char	*line;
-	t_list *head;
-	t_list *list;
+	t_mapline *head;
+	t_mapline *list;
 
 
 
   get_next_line(fd, &line);
-  // while(line[i])
-  // {
-  //   if(!ft_isdigit(line[i]) && line[i] != ' ' && line[i] != '-'
-  // && line[i] != '+')
-  //     return NULL;
-  //   i++;
-  // }
-  // i = 0;
-	list = ft_lstnew(line, ft_strlen(line) + 1);
+
+	list = lstnew(line, ft_strlen(line) + 1);
 	head = list;
   free(line);
 
 
 	while (get_next_line(fd, &line))
 	{
-    // while(line[i])
-    // {
-    //   if(!ft_isdigit(line[i]) && line[i] != ' ')
-    //     return NULL;
-    //   i++;
-    // }
-		list->next = ft_lstnew(line, ft_strlen(line) + 1);
+		list->next = lstnew(line, ft_strlen(line) + 1);
 		list = list->next;
     free(line);
 	}
@@ -225,7 +242,7 @@ int main(int argc, char **argv)
   void *img_ptr;
   char *firstline;
   char **array;
-  t_list *head;
+  t_mapline *head;
   int i = 0;
 	int width = 1200;
 	int height = 700;
@@ -253,13 +270,13 @@ int main(int argc, char **argv)
     return (0);
 
   mlx->head = get_head(fd);
-  mlx->scale = 7;
+  mlx->scale = 2;
   mlx->amplitude = 1;
   mlx->startX = 600;
   mlx->startY = 100;
-  mlx->crazy_rainbow_r = 150;
+  mlx->crazy_rainbow_r = 100;
   mlx->crazy_rainbow_g = 100;
-  mlx->crazy_rainbow_b = 50;
+  mlx->crazy_rainbow_b = 100;
 	mlx->projection = 0;
 
 
@@ -288,6 +305,8 @@ int main(int argc, char **argv)
   //printf("address of mlx->mlx_ptr is %p" , (void *) &mlx->img_ptr);
 
   //line(316, 499, 310 , 513, mlx_ptr, win_ptr);
+  fill_elements(mlx);
+
   draw_points(mlx);
 
   mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);

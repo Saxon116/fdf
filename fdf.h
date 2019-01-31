@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:31:29 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/31 14:31:00 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/31 16:54:36 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,22 @@
 #include <stdio.h>
 #include <math.h>
 
+typedef struct		s_mapline
+{
+	char			*content;
+	size_t		content_size;
+	char 			**elements;
+  char 			**nextelements;
+	struct s_mapline	*next;
+}					t_mapline;
+
 typedef struct		s_mlx
 {
 	void			*mlx_ptr;
 	void			*win_ptr;
 	void			*img_ptr;
 	char			*img_str;
-	t_list		*head;
+	t_mapline		*head;
 	float scale;
 	float amplitude;
 	int crazy_rainbow_r;
@@ -42,6 +51,8 @@ typedef struct		s_mlx
   int endian;
 	struct s_mlx	*next;
 }					t_mlx;
+
+
 
 void drawLine(int x0 , int y0 , int x1 , int y1, int amplitude, t_mlx *mlx);
 
