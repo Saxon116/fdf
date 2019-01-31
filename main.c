@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/31 12:18:01 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/31 15:05:31 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,27 +30,21 @@ void draw_points(t_mlx *mlx)
     nextelements = ft_strsplit((char *) list->next->content, ' ');
     while(nextelements[i] && nextelements[i + 1] && elements[i] && elements[i + 1])
     {
-
-      // mlx_pixel_put(mlx_ptr, win_ptr, startX + (i * mlx->scale * 1.7)
-      // - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
-      // - ft_atoi(elements[i]) * 10, 0x33FF9C);
-
-
 			if(!mlx->projection)
 			{
         drawLine(mlx->startX + (i * mlx->scale * 1.7)
         - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
         - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((i + 1) * mlx->scale * 1.7)
         - (j * mlx->scale * 1.7), mlx->startY + ((i + 1) * mlx->scale) + (j * mlx->scale)
-        - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude,
-        ft_atoi(elements[i]) * mlx->amplitude * 10, mlx);
+        - ft_atoi(elements[i + 1]) * mlx->scale * mlx->amplitude,
+        ft_max(ft_atoi(elements[i]), ft_atoi(elements[i+1])) * mlx->amplitude * 10, mlx);
 
         drawLine(mlx->startX + (i * mlx->scale * 1.7)
         - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
         - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (i * mlx->scale * 1.7)
         - ((j + 1) * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + ((j + 1) * mlx->scale)
         - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude,
-        ft_atoi(nextelements[i]) * mlx->amplitude * 10, mlx);
+        ft_max(ft_atoi(elements[i]), ft_atoi(nextelements[i])) * mlx->amplitude * 10, mlx);
 
 			}
       // OBLIQUE PARALLEL PROJECTION
@@ -60,16 +54,16 @@ void draw_points(t_mlx *mlx)
         mlx->startY + (j * (mlx->scale/2))
         - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (j * (-mlx->scale/2)) + ((i + 1) * mlx->scale)
         , mlx->startY + (j * (mlx->scale/2))
-        - ft_atoi(elements[i + 1]) * mlx->scale * mlx->amplitude, ft_atoi(nextelements[i + 1]) * mlx->amplitude * 10, mlx);
+        - ft_atoi(elements[i + 1]) * mlx->scale * mlx->amplitude,
+        ft_max(ft_atoi(elements[i]), ft_atoi(elements[i+1])) * mlx->amplitude * 10, mlx);
 
         drawLine(mlx->startX + (j * - (mlx->scale/2)) + (i * mlx->scale),
         mlx->startY + (j * (mlx->scale/2))
         - ft_atoi(elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((j + 1) * - (mlx->scale/2)) + (i * mlx->scale)
         , mlx->startY + ((j + 1) * (mlx->scale/2))
-        - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude, ft_atoi(nextelements[i + 1]) * mlx->amplitude * 10, mlx);
+        - ft_atoi(nextelements[i]) * mlx->scale * mlx->amplitude,
+        ft_max(ft_atoi(elements[i]), ft_atoi(nextelements[i])) * mlx->amplitude * 10, mlx);
 			}
-
-
       free(elements[i]);
       free(nextelements[i]);
       i++;
@@ -91,8 +85,7 @@ void display_controls(t_mlx *mlx)
   mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 50, 0xFFFFFF, "Projection: 'p'");
   mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 70, 0xFFFFFF, "Colors: 'c'");
   mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 90, 0xFFFFFF, "Move: arrow keys");
-
-
+  mlx_string_put(mlx->mlx_ptr, mlx->win_ptr, 10, 110, 0xFFFFFF, "Quit: Esc");
 }
 
 void redraw(t_mlx *mlx)
@@ -137,8 +130,8 @@ int deal_key(int key, void *param)
   if(key == 69 || key == 78 || key == 65451 || key == 65453)
   {
     direction = key == 69 || key == 65451  ? 1 : -1;
-    mlx->scale += direction;
-    mlx->startY -= direction * 10;
+    if(mlx->scale + direction >= 0)
+      mlx->scale += direction;
 		redraw(mlx);
   }
 
@@ -260,14 +253,8 @@ int main(int argc, char **argv)
     return (0);
 
   mlx->head = get_head(fd);
-  if(mlx->head == NULL)
-  {
-    printf("Not a valid file.\n");
-    return (0);
-  }
-
   mlx->scale = 7;
-  mlx->amplitude = -4.8;
+  mlx->amplitude = 1;
   mlx->startX = 600;
   mlx->startY = 100;
   mlx->crazy_rainbow_r = 150;

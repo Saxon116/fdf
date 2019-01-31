@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:09:46 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/29 18:31:56 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/01/31 14:46:43 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ int constrain(int val, int min, int max)
 void fill_pixel(t_mlx *mlx, int x, int y, int amplitude)
 {
     int index = 4 * (y * 1200) + 4 * x;
-    if(x >= 1200 || x <= 0 || y >= 700 || y <= 0)
-      return;
     mlx->img_str[index] =  constrain(mlx->crazy_rainbow_r + amplitude, 0, 255);
     mlx->img_str[index + 1] =  constrain(mlx->crazy_rainbow_g + amplitude * 2, 0, 255);
     mlx->img_str[index + 2] =  constrain(mlx->crazy_rainbow_b + amplitude / 2, 0, 255);
@@ -65,6 +63,9 @@ void swap(int *x, int *y)
 
 void drawLine(int x0 , int y0 , int x1 , int y1, int amplitude, t_mlx *mlx)
 {
+		if(x0 >= 1200 || x0 <= 0 || y0 >= 700 || y0 <= 0
+		|| x1 >= 1200 || x1 <= 0 || y1 >= 700 || y1 <= 0)
+			return;
     int steep = abs(y1 - y0) > abs(x1 - x0) ;
 
     if (steep)
