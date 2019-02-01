@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/31 17:53:01 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/02/01 14:48:53 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,12 +274,10 @@ int main(int argc, char **argv)
   mlx->amplitude = 1;
   mlx->startX = 600;
   mlx->startY = 100;
-  mlx->crazy_rainbow_r = 100;
-  mlx->crazy_rainbow_g = 100;
-  mlx->crazy_rainbow_b = 100;
+  mlx->crazy_rainbow_r = 80;
+  mlx->crazy_rainbow_g = 4;
+  mlx->crazy_rainbow_b = 55;
 	mlx->projection = 0;
-
-
 
 	// width = num_of_elements(head->content);
 	// height = list_length(head);
