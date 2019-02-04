@@ -6,35 +6,37 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/02/04 11:12:08 by nkellum           #+#    #+#             */
-/*   Updated: 2019/02/04 11:15:00 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/02/04 14:52:01 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-double ipart(double x)
+double	ipart(double x)
 {
-  return floor(x);
+	return (floor(x));
 }
 
-double round(double x)
+double	round(double x)
 {
-  return ipart(x + 0.5);
+	return (ipart(x + 0.5));
 }
 
-double fpart(double x)
+double	fpart(double x)
 {
-  return  x - floor(x);
+	return (x - floor(x));
 }
 
-double rfpart(double x)
+double	rfpart(double x)
 {
-  return 1 - fpart(x);
+	return (1 - fpart(x));
 }
 
-void swap(int *x, int *y)
+void	swap(int *x, int *y)
 {
-  int temp = *x;
-  *x = *y;
-  *y = temp;
+	int temp;
+
+	temp = *x;
+	*x = *y;
+	*y = temp;
 }

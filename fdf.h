@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:31:29 by nkellum           #+#    #+#             */
-/*   Updated: 2019/02/04 12:49:47 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/02/04 14:17:37 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,23 @@ typedef struct		s_mlx
 	void			*img_ptr;
 	char			*img_str;
 	t_mapline		*head;
+	t_mapline		*list;
 	float scale;
 	float amplitude;
 	float gradient;
-	float intersectY;
+	float intersecty;
+	int x0;
+	int y0;
+	int x1;
+	int y1;
 	int steep;
 	int xpxl1;
 	int xpxl2;
 	int crazy_rainbow_r;
 	int crazy_rainbow_g;
 	int crazy_rainbow_b;
-	int startX;
-	int startY;
+	int startx;
+	int starty;
 	int projection;
 	int bpp;
   int size_line;
@@ -57,7 +62,7 @@ typedef struct		s_mlx
 	struct s_mlx	*next;
 }					t_mlx;
 
-void drawLine(int x0 , int y0 , int x1 , int y1, int amplitude, t_mlx *mlx);
+void drawline(t_mlx *mlx, int amplitude);
 double ipart(double x);
 double round(double x);
 double fpart(double x);

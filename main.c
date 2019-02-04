@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/02/04 12:40:54 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/02/04 15:13:44 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,58 +51,96 @@ void fill_elements(t_mlx *mlx)
   }
 }
 
-void draw_points(t_mlx *mlx)
+void store_line_iso(t_mlx *mlx, int direction, int i, int j)
+{
+	if(!direction)
+	{
+		mlx->x0 = mlx->startx + (i * mlx->scale * 1.7)
+		- (j * mlx->scale * 1.7);
+		mlx->y0 = mlx->starty + (i * mlx->scale) + (j * mlx->scale)
+		- ft_atoi(mlx->list->elements[i]) * mlx->scale * mlx->amplitude;
+		mlx->x1 = mlx->startx + ((i + 1) * mlx->scale * 1.7)
+		- (j * mlx->scale * 1.7);
+		mlx->y1 = mlx->starty + ((i + 1) * mlx->scale) + (j * mlx->scale)
+		- ft_atoi(mlx->list->elements[i + 1]) * mlx->scale * mlx->amplitude;
+	}
+	else
+	{
+		mlx->x0 = mlx->startx + (i * mlx->scale * 1.7)
+		- (j * mlx->scale * 1.7);
+		mlx->y0 = mlx->starty + (i * mlx->scale) + (j * mlx->scale)
+		- ft_atoi(mlx->list->elements[i]) * mlx->scale * mlx->amplitude;
+		mlx->x1 = mlx->startx + (i * mlx->scale * 1.7)
+		- ((j + 1) * mlx->scale * 1.7);
+		mlx->y1 = mlx->starty + (i * mlx->scale) + ((j + 1) * mlx->scale)
+		- ft_atoi(mlx->list->nextelements[i]) * mlx->scale * mlx->amplitude;
+	}
+}
+
+void store_line_para(t_mlx *mlx, int direction, int i, int j)
+{
+	if(!direction)
+	{
+		mlx->x0 = mlx->startx + (j * (-mlx->scale/2)) + (i * mlx->scale);
+		mlx->y0 = mlx->starty + (j * (mlx->scale/2))
+		- ft_atoi(mlx->list->elements[i]) * mlx->scale * mlx->amplitude;
+		mlx->x1 = mlx->startx + (j * (-mlx->scale/2)) + ((i + 1) * mlx->scale);
+		mlx->y1 = mlx->starty + (j * (mlx->scale/2))
+		- ft_atoi(mlx->list->elements[i + 1]) * mlx->scale * mlx->amplitude;
+	}
+	else
+	{
+		mlx->x0 = mlx->startx + (j * - (mlx->scale/2)) + (i * mlx->scale);
+		mlx->y0 = mlx->starty + (j * (mlx->scale/2))
+		- ft_atoi(mlx->list->elements[i]) * mlx->scale * mlx->amplitude;
+		mlx->x1 = mlx->startx + ((j + 1) * - (mlx->scale/2)) + (i * mlx->scale);
+		mlx->y1 = mlx->starty + ((j + 1) * (mlx->scale/2))
+		- ft_atoi(mlx->list->nextelements[i]) * mlx->scale * mlx->amplitude;
+	}
+}
+
+void draw_iso(t_mlx *mlx, int i, int j)
+{
+	store_line_iso(mlx, 0, i, j);
+	drawline(mlx, ft_max(ft_atoi(mlx->list->elements[i]),
+	ft_atoi(mlx->list->elements[i+1])) * mlx->amplitude * 10);
+	store_line_iso(mlx, 1, i, j);
+	drawline(mlx, ft_max(ft_atoi(mlx->list->elements[i]),
+	ft_atoi(mlx->list->nextelements[i])) * mlx->amplitude * 10);
+}
+
+// OBLIQUE PARALLEL PROJECTION
+void draw_para(t_mlx *mlx, int i, int j)
+{
+	store_line_para(mlx, 0, i, j);
+	drawline(mlx, ft_max(ft_atoi(mlx->list->elements[i]),
+	ft_atoi(mlx->list->elements[i+1])) * mlx->amplitude * 10);
+	store_line_para(mlx, 1, i, j);
+	drawline(mlx, ft_max(ft_atoi(mlx->list->elements[i]),
+	ft_atoi(mlx->list->nextelements[i])) * mlx->amplitude * 10);
+}
+
+void draw_map(t_mlx *mlx)
 {
   int i = 0;
   int j = 0;
-  t_mapline *list;
-  list = mlx->head;
 
-
-  while(list->next)
+  while(mlx->list->next)
 	{
-    while(list->nextelements[i] && list->nextelements[i + 1] && list->elements[i] && list->elements[i + 1])
+    while(mlx->list->nextelements[i] && mlx->list->nextelements[i + 1]
+			&& mlx->list->elements[i] && mlx->list->elements[i + 1])
     {
 			if(!mlx->projection)
-			{
-        drawLine(mlx->startX + (i * mlx->scale * 1.7)
-        - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
-        - ft_atoi(list->elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((i + 1) * mlx->scale * 1.7)
-        - (j * mlx->scale * 1.7), mlx->startY + ((i + 1) * mlx->scale) + (j * mlx->scale)
-        - ft_atoi(list->elements[i + 1]) * mlx->scale * mlx->amplitude,
-        ft_max(ft_atoi(list->elements[i]), ft_atoi(list->elements[i+1])) * mlx->amplitude * 10, mlx);
-
-        drawLine(mlx->startX + (i * mlx->scale * 1.7)
-        - (j * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + (j * mlx->scale)
-        - ft_atoi(list->elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (i * mlx->scale * 1.7)
-        - ((j + 1) * mlx->scale * 1.7), mlx->startY + (i * mlx->scale) + ((j + 1) * mlx->scale)
-        - ft_atoi(list->nextelements[i]) * mlx->scale * mlx->amplitude,
-        ft_max(ft_atoi(list->elements[i]), ft_atoi(list->nextelements[i])) * mlx->amplitude * 10, mlx);
-
-			}
-      // OBLIQUE PARALLEL PROJECTION
+				draw_iso(mlx, i, j);
 			else
-			{
-        drawLine(mlx->startX + (j * (-mlx->scale/2)) + (i * mlx->scale),
-        mlx->startY + (j * (mlx->scale/2))
-        - ft_atoi(list->elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + (j * (-mlx->scale/2)) + ((i + 1) * mlx->scale)
-        , mlx->startY + (j * (mlx->scale/2))
-        - ft_atoi(list->elements[i + 1]) * mlx->scale * mlx->amplitude,
-        ft_max(ft_atoi(list->elements[i]), ft_atoi(list->elements[i+1])) * mlx->amplitude * 10, mlx);
-
-        drawLine(mlx->startX + (j * - (mlx->scale/2)) + (i * mlx->scale),
-        mlx->startY + (j * (mlx->scale/2))
-        - ft_atoi(list->elements[i]) * mlx->scale * mlx->amplitude, mlx->startX + ((j + 1) * - (mlx->scale/2)) + (i * mlx->scale)
-        , mlx->startY + ((j + 1) * (mlx->scale/2))
-        - ft_atoi(list->nextelements[i]) * mlx->scale * mlx->amplitude,
-        ft_max(ft_atoi(list->elements[i]), ft_atoi(list->nextelements[i])) * mlx->amplitude * 10, mlx);
-			}
+				draw_para(mlx, i, j);
       i++;
     }
     i = 0;
 		j++;
-		list = list->next;
+		mlx->list = mlx->list->next;
 	}
+	mlx->list = mlx->head;
 }
 
 void display_controls(t_mlx *mlx)
@@ -121,34 +159,17 @@ void redraw(t_mlx *mlx)
 	mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
 	mlx->img_str =  mlx_get_data_addr(mlx->img_ptr,
 		&(mlx->bpp), &(mlx->size_line), &(mlx->endian));
-	draw_points(mlx);
+	draw_map(mlx);
 	mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
   display_controls(mlx);
 }
-
-void  lstfree(t_mapline **alst)
-{
-	t_mapline *current;
-	t_mapline *next;
-
-	current = *alst;
-	while (current)
-	{
-		next = current->next;
-		free(current->content);
-		free(current);
-		current = next;
-	}
-	*alst = NULL;
-}
-
 
 int deal_key(int key, void *param)
 {
   t_mlx *mlx;
   double direction;
 
-	//printf("key is %d\n", key);
+	//ft_putendl("key is %d\n", key);
   direction = 0;
   mlx = (t_mlx *) param;
 
@@ -165,20 +186,20 @@ int deal_key(int key, void *param)
   if(key == 126 || key == 125 || key == 65362 || key == 65364)
   {
     direction = key == 65364 || key == 125 ? 10 : -10;
-    mlx->startY += direction;
+    mlx->starty += direction;
     redraw(mlx);
   }
 
   if(key == 123 || key == 124 || key == 65363 || key == 65361)
   {
     direction = key == 65363 || key == 124 ? 10 : -10;
-    mlx->startX += direction;
+    mlx->startx += direction;
     redraw(mlx);
   }
 
   if(key == 24 || key == 27 || key == 45 || key == 61)
   {
-    direction = key == 24 || key == 61 ? 0.5 : -0.5;
+    direction = key == 24 || key == 61 ? 0.1 : -0.1;
     mlx->amplitude += direction;
     redraw(mlx);
   }
@@ -205,15 +226,16 @@ int deal_key(int key, void *param)
 
 t_mapline *get_head (int fd)
 {
-  int i = 0;
+  int gnl;
 	char	*line;
 	t_mapline *head;
 	t_mapline *list;
 
 
 
-  get_next_line(fd, &line);
-
+  gnl = get_next_line(fd, &line);
+	if(!gnl)
+		return (NULL);
 	list = lstnew(line, ft_strlen(line) + 1);
 	head = list;
   free(line);
@@ -228,88 +250,67 @@ t_mapline *get_head (int fd)
   return (head);
 }
 
+int check_fd(int argc, char **argv)
+{
+	int fd;
+	char buf[1];
 
+	if(argc != 2)
+	{
+		ft_putendl("usage: ./fdf <filename>");
+		return (-1);
+	}
+  fd = open(argv[1], O_RDONLY);
+  if(fd < 0 || read(fd, buf , 0) < 0)
+  {
+    ft_putendl("Not a valid file.");
+    return (-1);
+  }
+	return (fd);
+}
+
+void initialize_mlx(t_mlx *mlx)
+{
+	mlx->list = mlx->head;
+  mlx->scale = 9;
+  mlx->amplitude = 2;
+  mlx->startx = 600;
+  mlx->starty = 100;
+  mlx->crazy_rainbow_r = 80;
+  mlx->crazy_rainbow_g = 4;
+  mlx->crazy_rainbow_b = 55;
+	mlx->projection = 0;
+	mlx->mlx_ptr = mlx_init();
+	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, 1200, 700, "Fil de Fer");
+  mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, 1200, 700);
+  mlx->img_str =  mlx_get_data_addr(mlx->img_ptr, &(mlx->bpp),
+  &(mlx->size_line), &(mlx->endian));
+}
 
 int main(int argc, char **argv)
 {
   int        fd;
 	t_mlx *mlx;
-  void *mlx_ptr;
-  void *win_ptr;
-  void *img_ptr;
-  char *firstline;
-  char **array;
-  t_mapline *head;
-  int i = 0;
-	int width = 1200;
-	int height = 700;
-  int bpp;
-  int size_line;
-  int endian;
-  char *img_str;
-  char buf[1];
 
-
-
-  if(argc != 2)
+  fd = check_fd(argc, argv);
+	if(fd == -1)
 	{
-		printf("usage: ./fdf <filename>\n");
-		return (0);
-	}
-  fd = open(argv[1], O_RDONLY);
-
-  if(fd < 0 || read(fd, buf , 0) < 0)
-  {
-    printf("Not a valid file.\n");
+    ft_putendl("Not a valid file.");
     return (0);
   }
   if((mlx = malloc(sizeof(t_mlx))) == NULL)
     return (0);
-
   mlx->head = get_head(fd);
-  mlx->scale = 9;
-  mlx->amplitude = 2;
-  mlx->startX = 600;
-  mlx->startY = 100;
-  mlx->crazy_rainbow_r = 80;
-  mlx->crazy_rainbow_g = 4;
-  mlx->crazy_rainbow_b = 55;
-	mlx->projection = 0;
-
-	// width = num_of_elements(head->content);
-	// height = list_length(head);
-	// mlx->startX = height;
-	// mlx->startX *= 17;
-
-	//printf("width is %d and height is %d mlx->startX is %d\n", width, height, mlx->startX);
-
-	// width = (17 * num_of_elements(head->content)) + (17 * list_length(head));
-	// height = width / 1.75;
-
-
-  //mlx_ptr = mlx_init();
-
-	mlx->mlx_ptr = mlx_init();
-
-	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, width, height, "Fil de Fer");
-
-  mlx->img_ptr = mlx_new_image(mlx->mlx_ptr, width, height);
-  mlx->img_str =  mlx_get_data_addr(mlx->img_ptr, &(mlx->bpp),
-  &(mlx->size_line), &(mlx->endian));
-
-  //printf("address of mlx->mlx_ptr is %p" , (void *) &mlx->img_ptr);
-
-  //line(316, 499, 310 , 513, mlx_ptr, win_ptr);
+	if(mlx->head == NULL)
+	{
+    ft_putendl("Not a valid file.\n");
+    return (0);
+  }
+	initialize_mlx(mlx);
   fill_elements(mlx);
-
-  draw_points(mlx);
-
+  draw_map(mlx);
   mlx_put_image_to_window(mlx->mlx_ptr, mlx->win_ptr, mlx->img_ptr, 0, 0);
   display_controls(mlx);
-  //mlx_pixel_put(mlx_ptr, win_ptr, 250, 250, 0x33FF9C);
-  //mlx_key_hook(mlx->win_ptr, deal_key, mlx);
   mlx_hook(mlx->win_ptr, 2, 0, deal_key, mlx);
-
   mlx_loop(mlx->mlx_ptr);
-
 }
