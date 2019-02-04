@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/13 15:40:16 by nkellum           #+#    #+#             */
-/*   Updated: 2019/01/31 17:52:42 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/02/04 12:34:34 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ t_list				*ft_lstmap(t_list *lst, t_list *(*f)(t_list *elem));
 int					ft_max(int a, int b);
 int					ft_min(int a, int b);
 int					ft_square(int n);
+int					ft_constrain(int val, int min, int max);
 int					get_next_line(const int fd, char **line);
 
 #endif

@@ -6,12 +6,12 @@
 #    By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/13 12:50:22 by nkellum           #+#    #+#              #
-#    Updated: 2019/01/31 10:49:14 by nkellum          ###   ########.fr        #
+#    Updated: 2019/02/04 11:22:37 by nkellum          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-SRC = main.c line.c
+SRC = main.c line.c linemath.c
 OBJ = $(SRC:.c=.o)
 
 # This is a minimal set of ANSI/VT100 color codes

@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/07 17:29:43 by nkellum           #+#    #+#             */
-/*   Updated: 2019/02/01 14:48:53 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/02/04 12:40:54 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,11 @@ void draw_points(t_mlx *mlx)
   int i = 0;
   int j = 0;
   t_mapline *list;
-  char **elements;
-  char **nextelements;
   list = mlx->head;
 
 
   while(list->next)
 	{
-
     while(list->nextelements[i] && list->nextelements[i + 1] && list->elements[i] && list->elements[i + 1])
     {
 			if(!mlx->projection)
@@ -159,7 +156,7 @@ int deal_key(int key, void *param)
       exit(0);
   if(key == 69 || key == 78 || key == 65451 || key == 65453)
   {
-    direction = key == 69 || key == 65451  ? .2 : -.2;
+    direction = key == 69 || key == 65451  ? .3 : -.3;
     if(mlx->scale + direction >= 0)
       mlx->scale += direction;
 		redraw(mlx);
@@ -181,7 +178,7 @@ int deal_key(int key, void *param)
 
   if(key == 24 || key == 27 || key == 45 || key == 61)
   {
-    direction = key == 24 || key == 61 ? 0.2 : -0.2;
+    direction = key == 24 || key == 61 ? 0.5 : -0.5;
     mlx->amplitude += direction;
     redraw(mlx);
   }
@@ -270,8 +267,8 @@ int main(int argc, char **argv)
     return (0);
 
   mlx->head = get_head(fd);
-  mlx->scale = 2;
-  mlx->amplitude = 1;
+  mlx->scale = 9;
+  mlx->amplitude = 2;
   mlx->startX = 600;
   mlx->startY = 100;
   mlx->crazy_rainbow_r = 80;
