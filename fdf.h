@@ -6,7 +6,7 @@
 /*   By: nkellum <nkellum@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 16:31:29 by nkellum           #+#    #+#             */
-/*   Updated: 2019/02/04 14:17:37 by nkellum          ###   ########.fr       */
+/*   Updated: 2019/02/04 15:26:17 by nkellum          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,15 @@ double round(double x);
 double fpart(double x);
 double rfpart(double x);
 void swap(int *x, int *y);
+t_mapline	*lstnew(char *content, size_t content_size);
+void fill_elements(t_mlx *mlx);
+t_mapline *get_head (int fd);
+void store_line_iso(t_mlx *mlx, int direction, int i, int j);
+void store_line_para(t_mlx *mlx, int direction, int i, int j);
+void draw_iso(t_mlx *mlx, int i, int j);
+void draw_para(t_mlx *mlx, int i, int j);
+void draw_map(t_mlx *mlx);
+void display_controls(t_mlx *mlx);
+void redraw(t_mlx *mlx);
 
 #endif
