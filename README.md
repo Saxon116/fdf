@@ -1,4 +1,4 @@
-# fdf (Mac only)
+# fdf (macOSX)
 First graphic program with ecole 42. Display a wireframe map from a file.
 
 To build: ```make```
